@@ -15,3 +15,5 @@ function SprayAndPray_getActions(gameInfo, botVars) {
 
     return actions;
 }
+
+module.exports = {setup: SprayAndPray_setup, getActions: SprayAndPray_getActions};

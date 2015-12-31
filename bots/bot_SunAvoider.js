@@ -1,14 +1,14 @@
 function SunAvoider_setup(team) {
 	var botVars = {};
-	
+
 	botVars["color"] = team;
-	
+
 	return botVars;
 }
 
 function SunAvoider_getActions(gameInfo, botVars) {
 	var actions = [];
-	
+
 	if (gameInfo[botVars["color"]+"_alive"]) {
 		var shipx = gameInfo[botVars["color"]+"_x"];
 		var shipy = gameInfo[botVars["color"]+"_y"];
@@ -18,9 +18,9 @@ function SunAvoider_getActions(gameInfo, botVars) {
 		var dy = shipy - suny;
 		var dis = Math.sqrt(dx*dx+dy*dy);
 		var fireEngineChance = (dis-100)/(gameInfo["fieldHeight"]/2);
-		
+
 		if (Math.random() > fireEngineChance){ actions.push("fire engine") }
-		
+
 		var ang1 = gameInfo[botVars["color"]+"_rot"]+90;
 		var ang2 = Math.degrees( Math.atan2(dy, dx) );
 		var angDiff = ang2 - ang1;
@@ -29,13 +29,16 @@ function SunAvoider_getActions(gameInfo, botVars) {
 		} else if (angDiff > 180) {
 			angDiff -= 360;
 		}
-		
+
 		if (angDiff >= 0) {
 			actions.push("turn left");
 		} else if (angDiff < 0) {
 			actions.push("turn right");
 		}
 	}
-	
+
 	return actions;
 }
+
+
+module.exports = {setup: SunAvoider_setup, getActions: SunAvoider_getActions};

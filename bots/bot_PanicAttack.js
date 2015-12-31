@@ -26,3 +26,5 @@ function PanicAttack_getActions(gameInfo, botVars) {
 
     return actions;
 }
+
+module.exports = {setup: PanicAttack_setup, getActions: PanicAttack_getActions};

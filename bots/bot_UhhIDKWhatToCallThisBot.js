@@ -24,3 +24,6 @@ function UhhIDKWhatToCallThisBot_getActions(gameInfo, botVars) {
     }
      return actions;
 }
+
+
+module.exports = {setup: UhhIDKWhatToCallThisBot_setup, getActions: UhhIDKWhatToCallThisBot_getActions};

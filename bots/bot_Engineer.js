@@ -40,3 +40,5 @@ function Engineer_getActions(gameInfo,botVars){
 	if(Math.random()<.7)actions.push("fire engine");
 	return actions;
 }
+
+module.exports = {setup: Engineer_setup, getActions: Engineer_getActions};

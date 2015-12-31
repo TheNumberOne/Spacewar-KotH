@@ -17,3 +17,5 @@ function MissilesPlusScore_getActions(gameInfo, botVars) {
 	}
     return actions;
 }
+
+module.exports = {setup: MissilesPlusScore_setup, getActions: MissilesPlusScore_getActions};

@@ -41,3 +41,5 @@ function Kamikaze_getActions(gameInfo, botVars) {
 
   return actions;
 }
+
+module.exports = {setup: Kamikaze_setup, getActions: Kamikaze_getActions};

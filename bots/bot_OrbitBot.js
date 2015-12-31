@@ -182,3 +182,6 @@ function OrbitBot_getActions(gameInfo, botVars) {
 
   return actions;
 }
+
+
+module.exports = {setup: OrbitBot_setup, getActions: OrbitBot_getActions};

@@ -17,3 +17,5 @@ function OpponentDodger_getActions(g,b){
 	a.push("fire engine");
 	return a;
 }
+
+module.exports = {setup: OpponentDodger_setup, getActions: OpponentDodger_getActions};

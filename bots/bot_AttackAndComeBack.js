@@ -12,3 +12,5 @@ function AttackAndComeBack_getActions(gameInfo, botVars) {
     actions.push("fire engine");
     return actions;
 }
+
+module.exports = {setup: AttackAndComeBack_setup, getActions: AttackAndComeBack_getActions};

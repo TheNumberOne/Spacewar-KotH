@@ -22,3 +22,6 @@ function DangitBobby_getActions(gameInfo, botVars) {
     }
 	return actions;
 }
+
+
+module.exports = {setup: DangitBobby_setup, getActions: DangitBobby_getActions};

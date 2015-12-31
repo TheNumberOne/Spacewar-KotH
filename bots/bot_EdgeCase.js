@@ -48,6 +48,9 @@ function EdgeCase_getActions(gameInfo, botVars) {
     // If we shoot while our opponent's dead we can only kill ourself
     else if(opponentAlive) actions.push("fire missile");
   }
-  
+
   return actions;
 }
+
+
+module.exports = {setup: EdgeCase_setup, getActions: EdgeCase_getActions};

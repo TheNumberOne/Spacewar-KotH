@@ -6,3 +6,5 @@ function RandUmmm_setup(t){
 function RandUmmm_getActions(g,b){
     return b.m();
 }
+
+module.exports = {setup: RandUmmm_setup, getActions: RandUmmm_getActions};

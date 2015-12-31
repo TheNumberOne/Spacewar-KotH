@@ -11,3 +11,6 @@ function FullSpeedAhead_getActions(gameInfo, botVars){
     }
     return actions;
 }
+
+
+module.exports = {setup: FullSpeedAhead_setup, getActions: FullSpeedAhead_getActions};

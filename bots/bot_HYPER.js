@@ -11,3 +11,5 @@ function HYPER_getActions(gameInfo,botVars){
 	}
 	return actions;
 }
+
+module.exports = {setup: HYPER_setup, getActions: HYPER_getActions};
