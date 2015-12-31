@@ -120,6 +120,7 @@ Game.prototype.setupGame = function (start) {
 	});
 
 	this.missiles = [];
+	this.gameInfo.missiles = this.missiles;
 	this.debris = [];
 };
 
@@ -461,15 +462,10 @@ Game.prototype.checkShipShipCollision = function (ship1, ship2) {
 					ship1.alive = false;
 					break;
 				case "left wing":
-					this.shipDebris(ship1,"damage right");
 					break;
 				case "right wing":
-					this.shipDebris(ship1,"damage left");
 					break;
 				case "nose only":
-					debrisType = "damage "+ship1.shape;
-					debrisType = debrisType.substr(0,debrisType.length-5);
-					this.shipDebris(ship1,debrisType);
 					break;
 			}
 			switch (priority[1]) {
@@ -477,15 +473,10 @@ Game.prototype.checkShipShipCollision = function (ship1, ship2) {
 					ship2.alive = false;
 					break;
 				case "left wing":
-					this.shipDebris(ship2,"damage right");
 					break;
 				case "right wing":
-					this.shipDebris(ship2,"damage left");
 					break;
 				case "nose only":
-					debrisType = "damage "+ship2.shape;
-					debrisType = debrisType.substr(0,debrisType.length-5);
-					this.shipDebris(ship2,debrisType);
 					break;
 			}
 
@@ -594,15 +585,10 @@ Game.prototype.checkMissileCollision = function (m, obj) {
 							ship.alive = false;
 							break;
 						case "left wing":
-							this.shipDebris(ship,"damage right");
 							break;
 						case "right wing":
-							this.shipDebris(ship,"damage left");
 							break;
 						case "nose only":
-							debrisType = "damage "+ship.shape;
-							debrisType = debrisType.substr(0,debrisType.length-5);
-							this.shipDebris(ship,debrisType);
 							break;
 					}
 

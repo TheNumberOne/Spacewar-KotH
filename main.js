@@ -33,6 +33,8 @@ var charh = 12;
 var maxlen = 20;
 var q = charw*maxlen;
 
+var leaderboard = {};
+
 function update() {
 	if (game.gameOver) { return true; }
 
@@ -48,8 +50,21 @@ function playGame() {
 	game = new Game();
 	while (!update());
 
-	console.log("Red: " + game.red.score);
-	console.log("Blue: " + game.blue.score);
+	if (!leaderboard[redPlayer]) {
+		leaderboard[redPlayer] = {};
+	}
+	if (!leaderboard[redPlayer][bluePlayer]) {
+		leaderboard[redPlayer][bluePlayer] = 1;
+	}
+	leaderboard[redPlayer][bluePlayer] = leaderboard[redPlayer][bluePlayer] + game.red.score;
+
+	if (!leaderboard[bluePlayer]) {
+		leaderboard[bluePlayer] = {};
+	}
+	if (!leaderboard[bluePlayer][redPlayer]) {
+		leaderboard[bluePlayer][redPlayer] = 1;
+	}
+	leaderboard[bluePlayer][redPlayer] = leaderboard[bluePlayer][redPlayer] + game.blue.score;
 }
 
 function moveShips() {
@@ -67,7 +82,7 @@ function moveShips() {
 	game.teamMove("red",uniqueRedActions);
 
 	uniqueBlueActions = [""];
-	var blueActions = require('./bots/bot_' + bluePlayer).getActions(game.gameInfo,redVars);
+	var blueActions = require('./bots/bot_' + bluePlayer).getActions(game.gameInfo,blueVars);
 	if (blueActions.indexOf("hyperspace") > -1) {
 		uniqueBlueActions.push("hyperspace");
 	} else {
@@ -84,7 +99,6 @@ for (var i = 0; i < fileNames.length; i++) {
 	var name = fileNames[i];
 	players.push(name.substring(4, name.length - 3));
 }
-console.log(players);
 
 for (var i = 0; i < players.length; i++) {
 	for (var j = 0; j < players.length; j++) {
@@ -96,3 +110,5 @@ for (var i = 0; i < players.length; i++) {
 		playGame();
 	}
 }
+
+console.log(leaderboard);
