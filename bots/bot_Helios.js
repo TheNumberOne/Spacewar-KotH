@@ -205,31 +205,3 @@ function Helios_getActions(gameInfo, botVars) {
 }
 
 module.exports = {setup: Helios_setup, getActions: Helios_getActions};
-
-function LineIntersection(L1, L2) {
-	// from http://stackoverflow.com/a/565282/1473772
-	var p = L1[0];
-	var r = [L1[1][0]-L1[0][0], L1[1][1]-L1[0][1]];
-	var q = L2[0];
-	var s = [L2[1][0]-L2[0][0], L2[1][1]-L2[0][1]];
-
-	var rcs = r[0]*s[1] - s[0]*r[1]; //r cross s
-	var qmp = [q[0]-p[0],q[1]-p[1]]; //q minus p
-	var qmpcr = qmp[0]*r[1] - r[0]*qmp[1]; //(q minus p) cross r
-	var qmpcs = qmp[0]*s[1] - s[0]*qmp[1]; //(q minus p) cross s
-
-	if (rcs === 0) { //they're parallel/colinear
-		return []; //I'm just going to assume that overlapping colinear lines don't happen
-	} else { //not parallel
-		var t = qmpcs/rcs;
-		var u = qmpcr/rcs;
-
-		if (0 <= t && t <= 1 && 0 <= u && u <= 1) { //intersection exists
-			var intx = p[0] + t*r[0];
-			var inty = p[1] + t*r[1];
-			return [[intx,inty],[t,u]];
-		} else { //no intersection
-			return [];
-		}
-	}
-}

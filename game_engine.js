@@ -125,9 +125,8 @@ Game.prototype.setupGame = function (start) {
 };
 
 Game.prototype.updateGame = function () {
-	if (this.frameCount > gameDuration) {
+	if (this.frameCount > gameDuration || this.restartFrame && this.frameCount - this.restartFrame > 100) {
 		this.gameOver = true;
-		this.updatePositions(true);
 		return true;
 	}
 
@@ -171,13 +170,7 @@ Game.prototype.updateGame = function () {
 
 };
 
-Game.prototype.updatePositions = function (debrisOnly) {
-	this.debris.forEach(function(fragment){
-		fragment.x += fragment.xv;
-		fragment.y += fragment.yv;
-		fragment.rot += fragment.rotVel;
-	});
-	if (debrisOnly) { return; }
+Game.prototype.updatePositions = function () {
 
 	var teams = this.teams;
 	var self = this;
@@ -710,3 +703,6 @@ function lineIntersection(L1, L2) {
 }
 
 module.exports = Game;
+
+global.LineIntersection = lineIntersection;
+global.window = {shipShapes: shipShapes};
