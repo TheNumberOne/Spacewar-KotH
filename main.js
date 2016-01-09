@@ -21,7 +21,7 @@ var redWins = 0;
 var blueWins = 0;
 
 var theGame;
-var numGames = 10;
+var numGames = 100;
 var inProgress = 0;
 var isDone = 0;
 var runAll = 0;
@@ -139,7 +139,7 @@ for (var i = 0; i < players.length; i++) {
 	for (var opponent in leaderboard[name]) {
 		var wins = leaderboard[name][opponent].wins;
 		var losses = leaderboard[name][opponent].losses;
-		var score = (wins + 1) / (losses + 1);
+		var score = wins - losses;
 		total += score;
 
         var tmpM = M;
