@@ -21,7 +21,7 @@ var redWins = 0;
 var blueWins = 0;
 
 var theGame;
-var numGames = 10;
+var numGames = 1;
 var inProgress = 0;
 var isDone = 0;
 var runAll = 0;
@@ -165,3 +165,18 @@ for (var i = 0; i < players.length; i++) {
 	var name = players[i];
 	console.log(i + 1, name, scores[name]);
 }
+
+var synaptic = require('synaptic');
+var brain = synaptic.Architect.LSTM(10, 10, 5, 5, 1);
+
+for (var i = 0; i < trainingData.length; i++) {
+	var d = trainingData[i];
+	var f = d.firedFrom;
+	var t = d.firedTo;
+	var input = [f.x, f.y, f.xv, f.yv, f.rot, t.x, t.y, t.xv, t.yv, t.rot];
+	brain.activate(input);
+	var expectedOutput = [d.succeeded ? 1 : 0];
+	brain.propagate(0.1, expectedOutput);
+	console.log(i);
+}
+console.log(brain.toJSON());

@@ -39,6 +39,8 @@ var deathDuration = 34; //34 frames, 1020 ms
 
 var gameDuration = 3000; //3000 frames, 90 seconds
 
+global.trainingData = [];
+
 //new
 
 function Game() {
@@ -313,6 +315,7 @@ Game.prototype.teamMove = function (team, actions) {
 					ship.hyperFrame = self.frameCount;
 					break;
 			}
+			self.fireMissile(ship, true);
 		}
 	});
 
@@ -503,7 +506,7 @@ Game.prototype.getShipCoords = function (ship) {
 	return tPoints;
 };
 
-Game.prototype.fireMissile = function (ship) {
+Game.prototype.fireMissile = function (ship, tracer) {
 	var mx,my,mxv,myv;
 	mx = ship.x + 10*Math.cos(Math.radians(ship.rot-90)); //adjusted to appear at the tip of the nose
 	my = ship.y + 10*Math.sin(Math.radians(ship.rot-90));
@@ -515,7 +518,22 @@ Game.prototype.fireMissile = function (ship) {
 	var dis = Math.sqrt(dx*dx+dy*dy);
 	if (dis <= sun.r || this.checkShipSunCollision(ship,true)) { return; }
 
-	this.missiles.push({'x':mx, 'y':my, 'xv':mxv, 'yv':myv, 'frameNum':this.frameCount, 'live':true, 'id':this.missiles.length+1});
+	var missile = {'x':mx, 'y':my, 'xv':mxv, 'yv':myv, 'frameNum':this.frameCount, 'live':true, 'id':this.missiles.length+1};
+	if (tracer) {
+		missile.tracer = true;
+		missile.succeeded = false;
+		missile.firedFrom = {x: ship.x, y: ship.y, vx: ship.xv, vy: ship.yv, rot:ship.rot, team: ship.color};
+		var enemy;
+		if (ship.color == 'red') {
+			enemy = this.blue;
+		} else {
+			enemy = this.red;
+		}
+		missile.firedTo = {x: enemy.x, y: enemy.y, vx: enemy.xv, vy: enemy.yv, rot:enemy.rot, team: enemy.color};
+		trainingData.push(missile);
+	}
+
+	this.missiles.push(missile);
 };
 
 Game.prototype.checkMissileCollision = function (m, obj) {
@@ -569,7 +587,12 @@ Game.prototype.checkMissileCollision = function (m, obj) {
 			if (closestIntersection.length) {
 				m.live = false;
 				if (!ship.alive){return;}
-
+				if (m.tracer) {
+					if (ship.color != m.firedTo.team) {
+						m.succeeded = true;
+					}
+					return;
+				}
 				var state = this.identifyDamage(ship, closestIntersection[2], closestIntersection[1][1]);
 				if (state) {
 					var debrisType;
