@@ -39,8 +39,6 @@ var deathDuration = 34; //34 frames, 1020 ms
 
 var gameDuration = 3000; //3000 frames, 90 seconds
 
-global.trainingData = [];
-
 //new
 
 function Game() {
@@ -124,11 +122,29 @@ Game.prototype.setupGame = function (start) {
 	this.missiles = [];
 	this.gameInfo.missiles = this.missiles;
 	this.debris = [];
+	this.trainingData = [];
 };
 
 Game.prototype.updateGame = function () {
 	if (this.frameCount > gameDuration || this.restartFrame && this.frameCount - this.restartFrame > 100) {
-		this.gameOver = true;
+		if (!this.gameOver) {
+			this.gameOver = true;
+			for (var i = 0; i < this.trainingData.length; i++) {
+				var d = this.trainingData[i];
+				var f = d.firedFrom;
+				var t = d.firedTo;
+				var input = [f.x, f.y, f.vx, f.vy, f.rot, t.x, t.y, t.vx, t.vy, t.rot];
+				/*for (var j = 0 ; j < input.length; j++ ) {
+					input[j] = 1 / (Math.sign(input[j])+input[j]);
+				}*/
+				//console.log(input);
+				brain.activate(input);
+				if (d.useToTrain) {
+					var expectedOutput = [d.succeeded ? 1 : 0];
+					brain.propagate(0.1, expectedOutput);
+				}
+			}
+		}
 		return true;
 	}
 
@@ -142,6 +158,13 @@ Game.prototype.updateGame = function () {
 		}
 	}
 	this.missiles = filteredMissiles;
+
+	if (!this.red.alive || !this.blue.alive || this.red.hyperFrame || this.blue.hyperFrame) {
+		for (var i = 0; i < this.missiles.length; i++) {
+			var m = this.missiles[i];
+			delete m.useToTrain;
+		}
+	}
 
 	if (this.frameCount - this.red.fireFrame > fireRateLimit) { this.red.missileReady = true; }
 	if (this.frameCount - this.blue.fireFrame > fireRateLimit) { this.blue.missileReady = true; }
@@ -287,6 +310,7 @@ Game.prototype.teamMove = function (team, actions) {
 	var ship = this[team];
 	var engineFired = 0;
 	var self = this;
+	self.fireMissile(ship, true);
 
 	actions.forEach(function(action){
 		if (ship.alive && !ship.hyperFrame) {
@@ -315,7 +339,6 @@ Game.prototype.teamMove = function (team, actions) {
 					ship.hyperFrame = self.frameCount;
 					break;
 			}
-			self.fireMissile(ship, true);
 		}
 	});
 
@@ -522,6 +545,7 @@ Game.prototype.fireMissile = function (ship, tracer) {
 	if (tracer) {
 		missile.tracer = true;
 		missile.succeeded = false;
+		missile.useToTrain = true;
 		missile.firedFrom = {x: ship.x, y: ship.y, vx: ship.xv, vy: ship.yv, rot:ship.rot, team: ship.color};
 		var enemy;
 		if (ship.color == 'red') {
@@ -530,7 +554,7 @@ Game.prototype.fireMissile = function (ship, tracer) {
 			enemy = this.red;
 		}
 		missile.firedTo = {x: enemy.x, y: enemy.y, vx: enemy.xv, vy: enemy.yv, rot:enemy.rot, team: enemy.color};
-		trainingData.push(missile);
+		this.trainingData.push(missile);
 	}
 
 	this.missiles.push(missile);
